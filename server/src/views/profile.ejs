@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Profile</h1>
+    </header>
+    <a href="/logout">Logout</a>
+    <h3>You can create a new post</h3>
+    <form action="/post" method="post">
+        <textarea name="" id="" placeholder="What's on your mind?" name="content"></textarea>
+        <button type="submit">Submit</button>
+    </form>
+    <div>
+        <h3>your post</h3>
+        <div class="post-container">
+            <h4>@someuser</h4>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, facilis? Molestiae dolor soluta earum. Possimus voluptas debitis sapiente eveniet deserunt cumque saepe inventore odit perspiciatis quis porro, hic voluptatum voluptates.</p>
+        </div>
+        <div class="likes">
+            <a href="">Like</a>
+            <a href="">Edit</a>
+        </div>
+
+        <div class="post-container">
+            <h4>@someuser</h4>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, facilis? Molestiae dolor soluta earum. Possimus voluptas debitis sapiente eveniet deserunt cumque saepe inventore odit perspiciatis quis porro, hic voluptatum voluptates.</p>
+        </div>
+        <div class="likes">
+            <a href="">Like</a>
+            <a href="">Edit</a>
+        </div>
+    </div>
+</body>
+</html>
