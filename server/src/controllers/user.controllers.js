@@ -30,7 +30,11 @@ exports.newUser = async (req, res) => {
             password:hashedPassword
         });
 
-        res.redirect("/login")
+        const checkUser = await User.findOne({username},{"username":1,"password":1,"_id":0});
+        const {accessToken} = await generateAccessTokens(checkUser); 
+
+        res.cookie("token",accessToken)
+        res.redirect("/profile")
         // return res.json({
         //     message:"User data are save successfully in Database",
         //     data:savedUserData
@@ -95,10 +99,8 @@ exports.userLogin = async (req, res) => {
     
         const {accessToken} = await generateAccessTokens(checkUser); 
 
-        if(accessToken){
-            accessToken
+        res.cookie("token",accessToken)
             res.redirect("/profile")
-        }
         
         // res.json({
         //     success: true,
@@ -116,7 +118,8 @@ exports.userLogin = async (req, res) => {
 
 exports.logOut = async (req, res) => {
     try {
-        await User.findOneAndUpdate(req.user,{$set:{"accesstoken":""}})
+        // await User.findOneAndUpdate(req.user,{$set:{"accesstoken":""}})
+        res.cookie("token","")
         return res.json({
             message:"User Logout"
         });
@@ -129,12 +132,12 @@ exports.logOut = async (req, res) => {
 
 exports.profile = async (req, res) => {
     try {
-        const name = req.user.username;
-        // res.render("profile",{name})
+        const name = await User.findOne({ username: req.user.username });
+        res.render("profile", { name });
         // name.populate("posts");
-        return res.json({
-            data:name
-        });
+        // return res.json({
+        //     data:name
+        // });
     } catch (error) {
         return res.json({
             message:`Error:${error}`
@@ -144,23 +147,22 @@ exports.profile = async (req, res) => {
 
 exports.post = async (req, res) => {
     try {
-            let user = await User.findOne({"username":req.user.username});
-            // let userData = await User.findOne({username:user.username})
-            console.log("a:",user)
-            // console.log("b:",userData)
-            let {content} = req.body;
-            let post = await Post.create({
-                user:user._id,
-                content
-            });
+        let user = await User.findOne({username:req.user.username});
+        // let userData = await User.findOne({username:user.username})
+        console.log("a:",user)
+        // console.log("b:",userData)
+        let {text} = req.body;
+        let post = await Post.create({
+            user:user._id,
+            text
+        });
         
-            // user.posts.push(post._id);
-            // await user.save();
-            res.redirect("/profile")
-        
+        user.posts.push(post._id);
+        await user.save();
+        res.redirect("/profile")
     } catch (error) {
         return res.json({
-            message:`Error:${error}`
+            message:`Error:${error.message || error}`
         });
     }
 }

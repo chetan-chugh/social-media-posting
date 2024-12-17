@@ -32,6 +32,7 @@ app.get('/login', (req, res) => {
 })
 
 app.get('/logout', (req, res) => {
+    res.clearCookie("token");
     res.render("login")
 })
 
@@ -39,8 +40,8 @@ app.get('/profile', (req, res) => {
     res.render("profile")
 })
 
-// app.post('/post', (req, res) => {
-//     res.render("profile")
-// })
+app.post('/post', (req, res) => {
+    res.render("profile")
+})
 app.listen(port, () => console.log(`Server started at port ${port}`));
 connectToDB();

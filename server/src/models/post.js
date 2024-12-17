@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 // const User = require('./User');
 
 const postSchema = new mongoose.Schema({
-    content:{type:String},
+    text:{type:String},
     user:{ type:mongoose.Schema.Types.ObjectId , ref:"User"},
     likes:[{type:mongoose.Schema.Types.ObjectId , ref:"User"}]
 },{timestamps:true});
