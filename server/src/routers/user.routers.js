@@ -9,9 +9,9 @@ router.post('/newUser',newUser);
 
 router.post('/userLogin',userLogin);
 
-router.post('/logOut',logOut);
+router.post('/logOut', logOut);
 
-router.get('/profile',isLoggedIn, profile);
+router.get('/profile', profile);
 
 router.post('/post',isLoggedIn, post);
 

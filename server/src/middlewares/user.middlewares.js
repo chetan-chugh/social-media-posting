@@ -15,7 +15,7 @@ exports.isLoggedIn = async (req, res, next) => {
 
     try {
         const isVerified = jwt.verify(jwtToken, process.env.ACCESS_TOKEN_SECRET);
-        const userData = await User.findOne({ username:isVerified.username },{"password":0});
+        const userData = await User.findOne( {username:isVerified.username} ,{"password":0});
         console.log(userData)
 
         req.user = userData;

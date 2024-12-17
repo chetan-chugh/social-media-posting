@@ -30,7 +30,7 @@ exports.newUser = async (req, res) => {
             password:hashedPassword
         });
 
-        res.redirect("/profile")
+        res.redirect("/login")
         // return res.json({
         //     message:"User data are save successfully in Database",
         //     data:savedUserData
@@ -61,7 +61,7 @@ const generateAccessTokens = async (username) => {
   
       user.accesstoken = accessToken
       await user.save({ validateBeforeSave: false })
-  
+
       return {accessToken}
   
     } catch (error) {
@@ -95,13 +95,19 @@ exports.userLogin = async (req, res) => {
     
         const {accessToken} = await generateAccessTokens(checkUser); 
 
-        res.redirect("/profile")
-        // return res.json({
+        if(accessToken){
+            accessToken
+            res.redirect("/profile")
+        }
+        
+        // res.json({
         //     success: true,
         //     message: "user logged In",
         //     accessToken
         // });
-    } catch (error) {
+    }
+
+    catch (error) {
         return res.json({
             message:`Error:${error}`
         });
@@ -124,6 +130,8 @@ exports.logOut = async (req, res) => {
 exports.profile = async (req, res) => {
     try {
         const name = req.user.username;
+        // res.render("profile",{name})
+        // name.populate("posts");
         return res.json({
             data:name
         });
@@ -135,14 +143,24 @@ exports.profile = async (req, res) => {
 };
 
 exports.post = async (req, res) => {
-    let user = await User.findOne({username: req.user.email});
-    let {content} = req.body;
-    let post = await Post.create({
-        user:user._id,
-        content: content
-    });
-
-    user.posts.push(post._id);
-    // await user.save();
-    res.redirect("/profile")
+    try {
+            let user = await User.findOne({"username":req.user.username});
+            // let userData = await User.findOne({username:user.username})
+            console.log("a:",user)
+            // console.log("b:",userData)
+            let {content} = req.body;
+            let post = await Post.create({
+                user:user._id,
+                content
+            });
+        
+            // user.posts.push(post._id);
+            // await user.save();
+            res.redirect("/profile")
+        
+    } catch (error) {
+        return res.json({
+            message:`Error:${error}`
+        });
+    }
 }

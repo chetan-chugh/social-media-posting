@@ -9,36 +9,91 @@
             margin: 0;
             padding: 0;
         }
+
+        body{
+            margin: 10px 20px;
+        }
+
+        header{
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        header a{
+            color: white;
+            text-decoration: none;
+        }
+
+        header button{
+            border-radius: 10px;
+            background-color: black;
+            padding: 5px;
+        }
+
+        form{
+            margin-top: 10px;
+        }
+
+        form textarea{
+            height: 100px;
+            width: 250px;
+            padding: 10px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        form button{
+            color: white;
+            background-color: black;
+            border-radius: 10px;
+            padding: 7px;
+        }
+
+        .post{
+            margin: 10px 0;
+        }
+
+        .post-container{
+            width: 700px;
+            margin: 10px 0;
+            border: 2px solid black;
+            text-align: justify;
+        }
+
+        .post-container p{
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Profile</h1>
+        <button><a href="/logout">Logout</a></button>
     </header>
-    <a href="/logout">Logout</a>
     <h3>You can create a new post</h3>
-    <form action="/post" method="post">
+    <form action="/api/post" method="post">
         <textarea name="" id="" placeholder="What's on your mind?" name="content"></textarea>
         <button type="submit">Submit</button>
     </form>
-    <div>
-        <h3>your post</h3>
+    <div class="post">
+        <h3>Your post's</h3>
         <div class="post-container">
-            <h4>@someuser</h4>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, facilis? Molestiae dolor soluta earum. Possimus voluptas debitis sapiente eveniet deserunt cumque saepe inventore odit perspiciatis quis porro, hic voluptatum voluptates.</p>
-        </div>
-        <div class="likes">
-            <a href="">Like</a>
-            <a href="">Edit</a>
+            
+           
+            <div class="likes">
+                <a href="">Like</a>
+                <a href="">Edit</a>
+            </div>
         </div>
 
         <div class="post-container">
             <h4>@someuser</h4>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, facilis? Molestiae dolor soluta earum. Possimus voluptas debitis sapiente eveniet deserunt cumque saepe inventore odit perspiciatis quis porro, hic voluptatum voluptates.</p>
-        </div>
-        <div class="likes">
-            <a href="">Like</a>
-            <a href="">Edit</a>
+            <div class="likes">
+                <a href="">Like</a>
+                <a href="">Edit</a>
+            </div>
         </div>
     </div>
 </body>
