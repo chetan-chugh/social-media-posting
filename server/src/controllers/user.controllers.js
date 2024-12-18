@@ -1,5 +1,5 @@
 const User = require('../models/User.js');
-const Post = require('../models/post');
+const Post = require('../models/Post.js');
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
@@ -90,7 +90,7 @@ exports.userLogin = async (req, res) => {
         const {accessToken} = await generateAccessTokens(checkUser); 
 
         res.cookie("token",accessToken)
-            res.redirect("/profile")
+        res.redirect("/profile")
     }
 
     catch (error) {
@@ -113,7 +113,8 @@ exports.logOut = async (req, res) => {
 exports.profile = async (req, res) => {
     try {
         const name = await User.findOne({ username: req.user.username });
-        res.render("profile", { name: name });
+        // console.log(name)
+        res.render("profile", { name });
     } catch (error) {
         return res.json({
             message:`Error:${error}`

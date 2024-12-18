@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     email:{type:String, require:true, unique:true},
     password:{type:String, require:true},
     posts:[
-        {type: mongoose.Schema.Types.ObjectId, ref:'post'}
+        {type: mongoose.Schema.Types.ObjectId, ref:'Post'}
     ],
     accesstoken:{type:String}
 });

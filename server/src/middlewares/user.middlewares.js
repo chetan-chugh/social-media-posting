@@ -16,7 +16,7 @@ exports.isLoggedIn = async (req, res, next) => {
         console.log(userData)
 
         req.user = userData;
-        res.render("profile")
+        // res.render("profile")
 
     } catch (error) {
         return res.json({
