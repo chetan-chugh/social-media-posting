@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {newUser, userLogin, logOut, profile, post} = require('../controllers/user.controllers');
+const {newUser, userLogin, logOut, profile, post, changePassword} = require('../controllers/user.controllers');
 
 const {isLoggedIn}  = require('../middlewares/user.middlewares')
 
@@ -14,5 +14,7 @@ router.get('/logOut',isLoggedIn, logOut);
 router.get('/profile',isLoggedIn, profile);
 
 router.post('/post',isLoggedIn, post);
+
+router.post('/post',changePassword)
 
 module.exports = router;

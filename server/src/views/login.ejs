@@ -4,37 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        *{
-            margin: 0;
-            padding: 0;
-        }
-
-        h1{
-            margin: 10px;
-        }
-
-        form{
-            margin: 10px;
-        }
-
-        input{
-            padding: 2px 5px ;
-            margin-right: 7px;
-        }
-
-        button{
-            padding: 2px;
-        }
-    </style>
+    <link rel="stylesheet" href="../../stylesheets/login.css">
 </head>
 <body>
-    <h1>Login User account</h1>
-    <form action="/api/userLogin" method="post">
-        <input type="text" name="username" placeholder="username">
-        <input type="password" name="password" placeholder="password">
-        <button type="submit" value="create account"> Submit </button>
-    </form>
-    
+    <div class="body-text">
+        <h1>Login User account</h1>
+        <form action="/api/userLogin" method="post" class="form-data">
+            <input type="text" name="username" placeholder="username">
+            <input type="password" name="password" placeholder="password">
+            <div class="password">
+                <a href="/api/changePassword">Forgot Password?</a>
+            </div>
+            <button type="submit" value="create account"> Login </button>
+            <h2>or</h2>
+            <a href="/">Create new account</a>
+        </form>
+    </div>
 </body>
 </html>

@@ -2,6 +2,8 @@ const User = require('../models/User.js');
 const Post = require('../models/Post.js');
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer')
+const otpGenerator = require('otp-generator')
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -98,6 +100,127 @@ exports.userLogin = async (req, res) => {
             message:`Error:${error}`
         });
     }
+};
+
+exports.changePassword = async (req, res) => {
+    try {
+      const {oldPassword, newPassword} = req.body;
+      if(!oldPassword || !newPassword){
+        res.json({
+          message:"Please enter old password and new password"
+        });
+      }
+      const user = await User.findOne(req.user._id)
+  
+      const checkPassword = await bcrypt.compare(oldPassword, user.password);
+      if (!checkPassword) {
+        return res.json({
+          success: false,
+          message: "password is invalid",
+        });
+      }
+  
+      const hashedPassword = await bcrypt.hash(newPassword, 10)
+      user.password = hashedPassword;
+  
+      await user.save({validateBeforeSve: false})
+  
+      return res.json({
+        message:"Password change successfully"
+      });
+  
+    } catch (error) {
+      data:error
+    }
+};
+
+global.otpStore = ""
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    const otp = otpGenerator.generate(6, {lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
+      const transporter = nodemailer.createTransport({
+          host: process.env.SMTP_HOST,
+          port: process.env.SMTP_PORT,
+          secure: false,
+          auth: {
+            user: process.env.SMTP_MAIL,
+            pass: process.env.SMTP_PASSWORD,
+          },
+      });
+      
+      const receiver = await transporter.sendMail({
+          from: process.env.SMTP_MAIL,
+          to: process.env.TO_MAIL,
+          subject: "Otp",
+          text: `Your OTP is ${otp}`,
+      }); 
+
+      global.otpStore = otp;
+
+      return res.json({
+          data:receiver,
+          message:"Mail is send successfully"
+      });
+  } catch (error) {
+      data:error
+  }
+};
+
+exports.verifyOTP = async (req, res) => {
+  const otpByUser = req.body.otp;
+  const otpInMail = global.otpStore;
+  if(!otpByUser){
+    return res.json({
+      message:"Please enter otp"
+    });
+  }
+
+  if(otpByUser == otpInMail){
+    return res.json({
+      message:'OTP is valid'
+    });
+  }
+
+  return res.json({
+    message:'OTP is not correct'
+  });
+};
+
+exports.newPassword = async (req, res) => {
+  try {
+    const {email, newPassword, confirmPassword} = req.body;
+    if(!email || !newPassword || !confirmPassword){
+      return res.json({
+        message:'Enter email, new password and confirm password'
+      });
+    }
+
+    if(newPassword !== confirmPassword){
+      return res.json({
+        message:"Confirm password is not match to confirm password"
+      });
+    }
+
+    const emailCheck = await User.findOne({email},{"email":1,"_id":0});
+
+    if(!emailCheck){
+      return res.json({
+        message:"Email is not matched"
+      });
+    }
+  
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+  
+    const savedNewPassword = await User.findOneAndUpdate(emailCheck,{$set:{password:hashedPassword}});
+  
+    return res.json({
+      message:'Password change successfully',
+      data:savedNewPassword
+    });
+  } catch (error) {
+    message:error
+  }
 };
 
 exports.logOut = async (req, res) => {

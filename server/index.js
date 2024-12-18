@@ -45,6 +45,10 @@ app.get('/profile',isLoggedIn, async (req, res) => {
     res.render("profile",{ name })
 })
 
+app.get('/changePassword', (req, res) => {
+    res.render("changePassword")
+})
+
 app.post('/post', (req, res) => {
     res.render("profile")
 })

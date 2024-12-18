@@ -9,7 +9,7 @@ body{
 }
 
 .body-text{
-    width: 40%;
+    width: 35%;
     border: 2px solid white;
     position: relative;
     top: 150px;
@@ -23,7 +23,7 @@ body{
 .body-text h1{
     text-align: center;
     font-size: 35px;
-    padding-bottom: 10px;
+    padding-bottom: 30px;
 }
 
 .form-data{
@@ -33,7 +33,7 @@ body{
     height: auto;
 }
 
-.form-data input{
+.form-data input, .password input{
     padding: 7px;
     margin-bottom: 20px;
     border-radius: 10px;
@@ -49,7 +49,28 @@ body{
     position: relative;
     left: 130px;
     font-size: 25px;
+    margin-top: 20px;
     padding: 5px 7px;
-    cursor:alias;
+    cursor: pointer;
 }
 
+.form-data h2{
+    position: relative;
+    left: 40%;
+    margin: 20px ;
+}
+
+.form-data a{
+    position: relative;
+    left: 25%;
+    color: white;
+    text-decoration: none;
+    font-size: 30px;
+}
+
+.password a{
+    position:relative;
+    left: 0 ;
+    font-size: 20px;
+    padding-bottom: 20px;
+}
