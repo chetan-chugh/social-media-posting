@@ -9,72 +9,67 @@ dotenv.config();
 
 //User Create 
 exports.newUser = async (req, res) => {
-    try {
-        const { username, email, password } = req.body;
-    
-        if(!username || !email || !password){
-            return res.json({
-                message:'Please enter username, email and password'
-            });
-        }
-    
-        if(email === await User.findOne({email},{"email":1, "_id":0})){
-            return res.json({
-                message:"User are already exist"
-            });
-        }
-    
-        const hashedPassword = await bcrypt.hash(password, 10);
-    
-        const savedUserData = await User.create({
-            username,
-            email,
-            password:hashedPassword
-        });
+  try {
+    const { name, email, password } = req.body;
 
-        const checkUser = await User.findOne({username},{"username":1,"password":1,"_id":0});
-        const {accessToken} = await generateAccessTokens(checkUser); 
-
-        res.cookie("token",accessToken)
-        res.redirect("/profile")
-    } catch (error) {
+    if(email === await User.findOne({email},{"email":1, "_id":0})){
         return res.json({
-            message:`Error:${error}`
+            message:"User are already exist"
         });
     }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const savedUserData = await User.create({
+        name,
+        email,
+        password:hashedPassword
+    });
+
+    const checkUser = await User.findOne({name},{"name":1,"password":1,"_id":0});
+    const {accessToken} = await generateAccessTokens(checkUser); 
+
+    res.cookie("token",accessToken)
+    console.log("a:",savedUserData)
+    res.json(savedUserData);
+} catch (error) {
+    return res.json({
+        message:`Error:${error}`
+    });
+}
 };
 
-const generateAccessTokens = async (username) => {
-    try {
-      const user = await User.findOne(username)
-  
-      const payloadAccessToken = {
-        username:user.username
-      }
-  
-      const accessToken = jwt.sign(payloadAccessToken,process.env.ACCESS_TOKEN_SECRET,{expiresIn: process.env.ACCESS_TOKEN_EXPIRY})
-      console.log("accessToken",accessToken)
+const generateAccessTokens = async (name) => {
+  try {
+    const user = await User.findOne(name)
 
-      user.accesstoken = accessToken
-      await user.save({ validateBeforeSave: false })
-
-      return {accessToken}
-  
-    } catch (error) {
-      message:error
+    const payloadAccessToken = {
+      name:user.name
     }
+
+    const accessToken = jwt.sign(payloadAccessToken,process.env.ACCESS_TOKEN_SECRET,{expiresIn: process.env.ACCESS_TOKEN_EXPIRY})
+    console.log("accessToken",accessToken)
+
+    user.accesstoken = accessToken
+    await user.save({ validateBeforeSave: false })
+
+    return {accessToken}
+
+  } catch (error) {
+    message:error
+  }
 }
 
 exports.userLogin = async (req, res) => {
     try {
-        const {username, password} = req.body;
-        if(!username && !password){
+        const {name, password} = req.body;
+        if(!name && !password){
             return res.json({
                 message:"Please enter username and password for login"
             });
         }
     
-        const checkUser = await User.findOne({username},{"username":1,"password":1,"_id":0});
+        const checkUser = await User.findOne({name},{"username":1,"password":1,"_id":0});
     
         if(!checkUser){
             return res.json({
