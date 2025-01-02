@@ -26,52 +26,51 @@ app.use('/api/',router);
 
 
 app.get('/', (req, res) => {
-    // res.render("index")
-    res.send("Hello")
+    res.render("index")
 })
 
-// app.get('/login', (req, res) => {
-//     res.render("login")
+app.get('/login', (req, res) => {
+    res.render("login")
     
-// //  res.redirect("/profile")
-// })
+//  res.redirect("/profile")
+})
 
-// app.get('/logout', (req, res) => {
-//     res.clearCookie("token");
-//     res.render("login")
-// })
+app.get('/logout', (req, res) => {
+    res.clearCookie("token");
+    res.render("login")
+})
 
-// app.get('/profile',isLoggedIn, async (req, res) => {
-//     const name = await User.findOne({ username: req.user.username }).populate("posts")
-//     res.render("profile",{ name })
-// })
+app.get('/profile',isLoggedIn, async (req, res) => {
+    const name = await User.findOne({ name: req.user.name }).populate("posts")
+    res.render("profile",{ name })
+})
 
-// app.get('/changePassword', (req, res) => {
-//     res.render("changePassword")
-// })
+app.get('/changePassword', (req, res) => {
+    res.render("changePassword")
+})
 
-// app.post('/post', (req, res) => {
-//     res.render("profile")
-// })
+app.post('/post', (req, res) => {
+    res.render("profile")
+})
 
-// app.get('/like/:id', async (req, res) => {
-//     const post = await Post.findOne({ _id: req.params.id }).populate("user")
+app.get('/like/:id', async (req, res) => {
+    const post = await Post.findOne({ _id: req.params.id }).populate("user")
 
-//     if(post.likes.indexOf(req.user) === -1){
-//         post.likes.push(req.user)
-//     } else{
-//         post.likes.splice(post.likes.indexOf(req.user), 1);
-//     }
+    if(post.likes.indexOf(req.user) === -1){
+        post.likes.push(req.user)
+    } else{
+        post.likes.splice(post.likes.indexOf(req.user), 1);
+    }
     
-//     await post.save()
-//     res.redirect("/profile");
-// })
+    await post.save()
+    res.redirect("/profile");
+})
 
-// app.get('/edit/:id', isLoggedIn, async (req, res) => {
-//     const post = await Post.findOne({ _id: req.params.id }).populate("user")
+app.get('/edit/:id', isLoggedIn, async (req, res) => {
+    const post = await Post.findOne({ _id: req.params.id }).populate("user")
 
-//     res.render("edit")
-// })
+    res.render("edit")
+})
 
 app.listen(port, () => console.log(`Server started at port ${port}`));
 connectToDB();
