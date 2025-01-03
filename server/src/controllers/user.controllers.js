@@ -250,16 +250,18 @@ exports.profile = async (req, res) => {
 
 exports.post = async (req, res) => {
     try {
-        let user = await User.findOne({username:req.user.username});
+        let user = await User.findOne({name:req.user.name});
         let {text} = req.body;
         let post = await Post.create({
             user:user._id,
-            text
+            data:text
         });
         
         user.posts.push(post._id);
         await user.save();
-        res.redirect("/profile")
+        res.json({
+          data:text
+        })
     } catch (error) {
         return res.json({
             message:`Error:${error.message || error}`
