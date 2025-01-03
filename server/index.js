@@ -6,9 +6,13 @@ const Post = require('./src/models/Post.js');
 const {isLoggedIn}  = require('./src/middlewares/user.middlewares.js')
 const dotenv = require('dotenv')
 dotenv.config();
+const cors = require('cors');
+
+
 
 const app = express();
 const port = process.env.PORT || 7000;
+app.use(cors());  // Enable CORS for all routes
 
 const {connectToDB} = require('./src/config/db.js');
 const router = require('./src/routers/user.routers.js');
@@ -36,13 +40,11 @@ app.get('/login', (req, res) => {
 })
 
 app.get('/logout', (req, res) => {
-    res.clearCookie("token");
-    res.render("login")
+    
 })
 
 app.get('/profile',isLoggedIn, async (req, res) => {
-    const name = await User.findOne({ name: req.user.name }).populate("posts")
-    res.render("profile",{ name })
+   
 })
 
 app.get('/changePassword', (req, res) => {

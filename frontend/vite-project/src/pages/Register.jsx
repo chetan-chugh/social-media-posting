@@ -1,17 +1,22 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
       .post("/api/newUser", { name, email, password })
       .then((result) => {
-        console.log("Success:", result);
+        if(name && email && password){
+          console.log("Success:", result);
+          navigate('/success');
+        }
       })
       .catch((error) => {
         console.error("Error:", error);

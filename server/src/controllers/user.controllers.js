@@ -56,45 +56,45 @@ const generateAccessTokens = async (name) => {
     return {accessToken}
 
   } catch (error) {
-    message:error
+    console.log(`Error:${error}`)
   }
 }
 
 exports.userLogin = async (req, res) => {
-    try {
-        const {name, password} = req.body;
-        if(!name && !password){
-            return res.json({
-                message:"Please enter username and password for login"
-            });
-        }
-    
-        const checkUser = await User.findOne({name},{"username":1,"password":1,"_id":0});
-    
-        if(!checkUser){
-            return res.json({
-                message:"User is not exist."
-            });
-        }
-    
-        const checkPassword = await bcrypt.compare(password, checkUser.password);
-        if(!checkPassword){
-            return res.json({
-                message:"Password is not correct"
-            });
-        }
-    
-        const {accessToken} = await generateAccessTokens(checkUser); 
+  try {
+      const { name, password } = req.body;
+      if (!name || !password) {
+          return res.json({
+              message: "Please enter username and password for login"
+          });
+      }
 
-        res.cookie("token",accessToken)
-        res.redirect("/profile")
-    }
+      const checkUser = await User.findOne({ name }, { "name": 1, "password": 1, "_id": 0 });
 
-    catch (error) {
-        return res.json({
-            message:`Error:${error}`
-        });
-    }
+      if (!checkUser) {
+          return res.json({
+              message: "User does not exist."
+          });
+      }
+
+      const checkPassword = await bcrypt.compare(password, checkUser.password);
+      if (!checkPassword) {
+          return res.json({
+              message: "Password is incorrect"
+          });
+      }
+
+      const { accessToken } = await generateAccessTokens(checkUser); 
+
+      res.cookie("token", accessToken);
+      res.json(checkUser);
+      // res.json(checkPassword)
+      // return res.status(200).json({ message: "User login successfully",checkUser });
+  } catch (error) {
+      return res.json({
+          message: `Error: ${error.message || error}`
+      });
+  }
 };
 
 exports.changePassword = async (req, res) => {
@@ -125,8 +125,10 @@ exports.changePassword = async (req, res) => {
       });
   
     } catch (error) {
-      data:error
-    }
+      return res.json({
+          message:`Error:${error}`
+      });
+  }
 };
 
 global.otpStore = ""
@@ -158,8 +160,10 @@ exports.forgotPassword = async (req, res) => {
           message:"Mail is send successfully"
       });
   } catch (error) {
-      data:error
-  }
+    return res.json({
+        message:`Error:${error}`
+    });
+}
 };
 
 exports.verifyOTP = async (req, res) => {
@@ -171,7 +175,7 @@ exports.verifyOTP = async (req, res) => {
     });
   }
 
-  if(otpByUser == otpInMail){
+  if(otpByUser === otpInMail){
     return res.json({
       message:'OTP is valid'
     });
@@ -214,13 +218,18 @@ exports.newPassword = async (req, res) => {
       data:savedNewPassword
     });
   } catch (error) {
-    message:error
-  }
+    return res.json({
+        message:`Error:${error}`
+    });
+}
 };
 
 exports.logOut = async (req, res) => {
     try {
-
+      res.clearCookie("token","");
+      res.json({
+        message:'Clear the cookie'
+      })
     } catch (error) {
         return res.json({
             message:`Error:${error}`
@@ -230,9 +239,8 @@ exports.logOut = async (req, res) => {
 
 exports.profile = async (req, res) => {
     try {
-        const name = await User.findOne({ username: req.user.username });
-        // console.log(name)
-        res.render("profile", { name });
+        const name = await User.findOne({ name: req.user.name },{"name":1,"_id":0});
+        res.json(name)
     } catch (error) {
         return res.json({
             message:`Error:${error}`

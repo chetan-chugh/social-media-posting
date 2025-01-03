@@ -1,20 +1,28 @@
-import React, { useEffect, useState } from "react";
+import {useState } from "react";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [name, setName] = useState();
   const [password, setPassword] = useState();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    axios
-      .post("/api/newLogin", { name, password })
-      .then((result) => {
-        console.log("Success:", result);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    try{
+      let response = await axios.post("/api/userLogin", { name,password })
+      console.log("Success:", response);
+      if(response.data.name!==name && !response.data.password){
+        alert('User and password is not correct')
+      }
+      else{
+        console.log("Success:", response);
+        navigate('/success');
+      }
+    }
+      catch{
+        console.error("Error");
+      };
   };
 
 
@@ -50,7 +58,7 @@ function Login() {
               type="submit"
               className="text-gray-100 bg-green-700 rounded py-1 text-lg"
             >
-              Login 
+                Login 
             </button>
           </form>
         </div>
