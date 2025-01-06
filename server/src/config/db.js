@@ -9,7 +9,6 @@ exports.connectToDB = async (req, res) => {
         }
         console.log('Databse connect sucessfully');
     } catch (error) {
-        error
         console.log("Error while connection to Database");
     }
 }

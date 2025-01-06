@@ -251,16 +251,19 @@ exports.profile = async (req, res) => {
 exports.post = async (req, res) => {
     try {
         let user = await User.findOne({name:req.user.name});
-        let {text} = req.body;
+        let text = req.body
         let post = await Post.create({
             user:user._id,
-            data:text
+            text:this.post.text
         });
+        
+        const data = await Post.findOne();
+        console.log("data",data);
         
         user.posts.push(post._id);
         await user.save();
         res.json({
-          data:text
+          data:text,
         })
     } catch (error) {
         return res.json({
